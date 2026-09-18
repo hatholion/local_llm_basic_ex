@@ -1,0 +1,56 @@
+<!-- 빈 html 파일에서 shift + 느낌표 하면 기본적 구조가 만들어짐. -->
+<!-- Html은 template을 위한 구조. -->
+<!-- https://www.w3schools.com/ 를 통해 문법 및 예시 볼 수 있음. -->
+
+{% extends 'base.html' %} <!-- base.html로 부터 상속받음. -->
+{% block content %}
+    
+    <main>
+        <a href="/"><p class="head_img"></p></a>
+        <h4>나를 성장시키는 메모</h4>
+        <br>
+    <form action="/add" method="post"> <!-- 입력 : 반드시 form tag로 싸 줘야 한다. -->
+        <!-- <textarea name="task" rows="5" placeholder="Enter your task" id="task" required></textarea> -->
+        <textarea name="task" rows="5" placeholder="Enter your task" id="task"></textarea> <!--  action에 path 명시 -->
+        <button type="submit" id="add_task"> <!-- button type이 submit이어야 값 받아서 넘김. -->
+          Add
+        </button>
+    </form>
+	
+	    <br>
+	    <h2>Tasks</h2>
+
+	    <div>
+            {% for todo in todos %} <!-- Rendering 수행 파트. todos 안에 task, id, completed 있음. for문으로 한 row씩 가져옴. -->
+            <div class="task">
+                {% if todo.completed %}
+                    <strike>{{ todo.task }}</strike> <!--수행한 내용은 취소선 처리. -->
+                {% else %}
+                    {{todo.task}}
+                {% endif %}
+	                <small>
+	                    <a href="/edit/{{ todo.id }}">Edit</a>   <!-- 몇 번째를 edit할 것인지 식별하기 위해 {{todo.id}}-->
+	                    <a href="/delete/{{ todo.id }}">Delete</a> <!-- 몇 번째를 delete할 것인지 식별하기 위해 {{todo.id}}-->
+	                </small>
+	         </div>
+            {% endfor %}
+	    </div>
+    </main>
+
+{% endblock content %}
+
+
+<!--
+<!DOCTYPE html>
+<html lang="en"> <! -open. 안은 head, body로 구성. -->
+<!--<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1> todos 앱</h1>
+    # 변수가 갖고 있는 동작 data를 lendering
+    <h2> {{todos}} </h2> <! - {} 2개 : 중괄호의 key. 변수가 갖고 있는 value를 찍으려면 memory 부분을 {} 2개로 싸야 함. -->
+<!--</body>
+</html> <! -close -->

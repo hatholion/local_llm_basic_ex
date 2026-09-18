@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <main>
+    <form action="/edit/{{todo.id}}" method="post">
+        <textarea name="task" rows="5">{{todo.task}}</textarea> <!-- test area에 lendering 됨 -->
+        <label for="completed">Done?</label>
+        <input type="checkbox" name="completed" {% if todo.completed %}checked{% endif %}> <!-- 참이면 check 표시됨 -->
+
+        <button type="submit">Save</button> <!-- /edit/ 아래에 있는 todo.id로 가서 수정. -->
+    </form>
+    <!-- 미션: 아래쪽에 데이터 목록이 보이도록 만들기 -->
+    <div>
+        <h2>Task</h2>
+        {% for todo in todos %}
+        <div class="task">
+            {% if todo.completed %}
+                <strike>{{ todo.task }}</strike>
+            {% else %}
+                {{ todo.task }}
+            {% endif %}
+            <small>
+                <a href="/edit/{{ todo.id }}">Edit</a>           <!-- edit인지 delte인지 구분하기 위해 표시 + 동적인 값 -->
+                <a href="/delete/{{ todo.id }}">Delete</a>        <!-- edit인지 delte인지 구분하기 위해 표시 + 동적인 값 -->
+            </small>
+        </div>
+        {% endfor %}
+    </div>
+    </main>
+    
+{% endblock content %}

@@ -16,6 +16,7 @@
 # 웹으로 만들면 앱으로 만들 수 있고, 서비스를 배포하는 방법 중 웹이 가장 배포하기 쉽다.
 
 from fastapi import FastAPI
+import uvicorn
 
 # fast api 객체 생성
 app = FastAPI()
@@ -77,21 +78,31 @@ class UserCreate(BaseModel): # 반드시 BaseModel을 상속받아야 함.
     avatar_url: Optional[HttpUrl] = None
     user_fullname : Optional[str] = None
 
+# DTO 응답 전송 채계
+class UserResponse(BaseModel):
+    username : str
+    avatar_url: HttpUrl
 
-@app.post("/user_info/")
-def create_item(user : UserCreate): # 객체 변수 user 로 user 정보가 담겨 있는 UserCreate에 access
+
+@app.post("/user_info/", response_model = UserResponse)
+def create_user(user : UserCreate): # 객체 변수 user 로 user 정보가 담겨 있는 UserCreate에 access
     print(f'username: {user.username}') 
     print(f'avatar_url: {user.avatar_url}')
     print(f'user_fullname: {user.user_fullname}')
 
-    return user
+    user_info = UserResponse(
+        username = user.username,
+        avatar_url = user.avatar_url
+    )
+
+    return user_info
     # return {"user" : user}
 
 
 
 # get 방식이 아닌 post 방식 사용.
 @app.post("/user_info/{user_id}")
-def create_item(user_id: int, q: str | None = None): # end point 함수
+def create_user(user_id: int, q: str | None = None): # end point 함수
     print(f'user_id: {user_id}, q: {q}') 
     return {"user_id": user_id, "q": q} 
     # python에서는 key, value 값으로 되는 건 dictionary 형태임.
@@ -106,3 +117,11 @@ def create_item(user_id: int, q: str | None = None): # end point 함수
 
 
 # 올바른 경로 : # http://127.0.0.1:8000/user_info/1234
+
+
+## 실행 방식들
+# uv run fastapi dev (dev : 개발자 모드. main file 있는 위치에서 반드시 실행해야 함.)
+
+if __name__ == '__main__':
+    # uvicorn.run("main(현재 file 이름):app(Fast Api 객체_식별자)", reload=True(개발자 모드))
+    uvicorn.run("main:app", reload=True)
