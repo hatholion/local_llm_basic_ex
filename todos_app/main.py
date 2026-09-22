@@ -9,13 +9,14 @@ import uvicorn
 import os
 
 # 데이터 CRUD 외 data base 관련은 맨 앞에 오면 됨.
+
 from database import engine, SessionLocal, Base
 
-# FAST API에서 도릴 때마다 전체를 memory에 로딩시키므로 modle를 improt
-# CPU가 modles 안의 일을 수행. --> 표 만듦.
-import models
+# FAST API에서 돌릴 때마다 전체를 memory에 로딩시키므로 modle를 improt
+# CPU가 modles.py 안의 일을 수행. --> 표 만듦.
+import models # 해당 작용은 main.py 전체 실행 시 한 번만 발생.
 
-# models에 정의한 모든 클래스, 연결한 DB엔진에 테이블로 생성. 테이블 한 번 생산 후엔 다시 적지 않음.
+# models에 정의한 모든 클래스, 연결한 DB엔진에 테이블로 생성. 테이블 한 번 생산 후엔 다시 적지 않음(한 번만 수행되므로).
 Base.metadata.create_all(bind=engine)
 
 # FastAPI() 객체 생성. 반드시 해줘야 함.
